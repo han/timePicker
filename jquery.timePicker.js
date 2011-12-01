@@ -14,6 +14,7 @@
  *   step: # of minutes to step the time by
  *   startTime: beginning of the range of acceptable times
  *   endTime: end of the range of acceptable times
+ *   firstTime: start of time range in select control. Defaults to startTime.
  *   separator: separator string to use between hours and minutes (e.g. ':')
  *   show24Hours: use a 24-hour scheme
  */
@@ -41,6 +42,10 @@
     var keyDown = false;
     var startTime = timeToDate(settings.startTime, settings);
     var endTime = timeToDate(settings.endTime, settings);
+    if (!settings.hasOwnProperty('firstTime')) {
+      settings.firstTime = settings.startTime;
+    }
+    var firstTime = timeToDate(settings.firstTime, settings);
     var selectedClass = "selected";
     var selectedSelector = "li." + selectedClass;
 
@@ -99,7 +104,7 @@
       $tpDiv.show();
 
       // Try to find a time in the list that matches the entered time.
-      var time = elm.value ? timeStringToDate(elm.value, settings) : startTime;
+      var time = elm.value ? timeStringToDate(elm.value, settings) : firstTime;
       var startMin = startTime.getHours() * 60 + startTime.getMinutes();
       var min = (time.getHours() * 60 + time.getMinutes()) - startMin;
       var steps = Math.round(min / settings.step);
